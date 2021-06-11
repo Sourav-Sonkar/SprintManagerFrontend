@@ -1,0 +1,35 @@
+<nav class="navbar  navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand">
+            <img [src]="logo" alt="" width="30" height="30" class="d-inline-block align-text-top">
+            Raiser
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0" *ngIf="empAuth.isSignedIn">
+                <li class="nav-item"><a class="nav-link" routerLink="/home" routerLinkActive="active">Home</a></li>
+                <li class="nav-item"><a class="nav-link" routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+                </li>
+                <li class="nav-item"><a class="nav-link" routerLink="/task" routerLinkActive="active">Task</a></li>
+                <li class="nav-item"><a class="nav-link" routerLink="/team" routerLinkActive="active">Team</a></li>
+            </ul>
+            <!--<form class="d-flex">
+                <input class="form-control me-2" type="search" placeholder="Search Task by Id" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>-->
+        </div>
+        <ul class="navbar-nav d-flex mb-2 mb-lg-0">
+            <li class="nav-item"><a class="nav-link" *ngIf="empAuth.isManager">Manager</a></li>
+            <li class="nav-item" *ngIf="empAuth.isSignedIn"><a class="nav-link material-icons" (click)="logout()"
+                    routerLink="/auth">logout</a>
+            </li>   
+            <li class="nav-item" *ngIf="!empAuth.isSignedIn"><a class="nav-link" (click)="empAuth.changeForm()"
+                    routerLinkActive="active" routerLink="/auth">{{(empAuth.isSignUp)?"Go to Login":"Go
+                    to Register"}}</a></li>
+        </ul>
+    </div>
+    
+</nav>

@@ -1,0 +1,188 @@
+<div class="container p-3" *ngIf="!empAuth.isManager">
+    <h1 class="heading">Task Details</h1>
+    <hr>
+    <div class="d-flex justify-content-between">
+        <h5 class="heading">Task Title:{{taskService.empTask.tasktitle}}</h5>
+        <h5 class="heading">Task Id:{{taskService.empTask.taskid}}</h5>
+    </div>
+    <h5 class="heading">Task Description:{{ taskService.empTask.taskdesc}}</h5>
+    <div class="d-flex justify-content-between">
+        <h5 class="heading">Task Description:{{ dateformat(taskService.empTask.taskdate)}}</h5>
+        <h5 class="heading">Task Status:{{taskService.empTask.taskstatus}}</h5>
+    </div>
+    <hr>
+    <h3 class="heading">Task Update Status</h3>
+    <form class="mx-auto  " (ngSubmit)="updateTaskStatusByEmp(updateTaskStatusForm)" #updateTaskStatusForm="ngForm">
+        <div class="form-control" style="border: none;">
+            <div class="alert alert-danger" role="alert" *ngIf="errorUpdate">
+                Something went wrong try again
+            </div>
+            <div class="alert alert-success" role="alert" *ngIf="successUpdate">
+                Added Successfully
+            </div>
+            <label for="taskstatus">Status</label>
+            <select id="taskstatus" name="taskstatus" #taskstatus="ngModel" required
+                [(ngModel)]="existingTask.taskstatus" class="form-control my-2 p-1.6">
+                <option *ngFor="let status of taskService.taskStatusList; let i = index" [value]="status">
+                    {{status}}
+                </option>
+            </select>
+
+            <div class="d-grid gap-2 pt-2">
+                <button type="submit" class="btn btn-success"
+                    [disabled]="updateTaskStatusForm.pristine || updateTaskStatusForm.invalid">Update Task
+                    Status
+                </button>
+            </div>
+        </div>
+    </form>
+
+</div>
+<ul class="nav nav-tabs  bg-light" *ngIf="empAuth.isManager">
+    <li class="nav-item">
+        <button class="nav-link active d-flex align-items-center justify-content-center" data-bs-toggle="tab" data-bs-target="#teamList" id="teamListTab"
+            aria-current="teamList"> <span class="material-icons px-1">list_alt</span><span>Task List</span></button>
+    </li>
+    <li class="nav-item">
+        <button class="nav-link d-flex align-items-center justify-content-center" data-bs-toggle="tab" data-bs-target="#createTeam" id="createTeamTab"><span class="material-icons px-1">add_task</span><span>Create
+            Task</span></button>
+    </li>
+    <li class="nav-item">
+        <button class="nav-link d-flex align-items-center justify-content-center" data-bs-toggle="tab" data-bs-target="#addemp" id="addEmpTab"><span class="material-icons px-1">playlist_add_check</span><span>Assign Task</span></button>
+    </li>
+    <li class="nav-item">
+        <button class="nav-link d-flex align-items-center justify-content-center" data-bs-toggle="tab" data-bs-target="#updateTask" id="updateTaskTab"><span class="material-icons px-1">upgrade</span><span>Update Task Status</span>
+            </button>
+    </li>
+
+</ul>
+<div class="container p-3" *ngIf="empAuth.isManager">
+    <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="teamList" role="tabpanel" aria-labelledby="post-tab">
+            <h1 class="heading">Task List</h1>
+            <hr>
+            <table class="table table-light table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">Task Id</th>
+                        <th scope="col">Task Title </th>
+                        <th scope="col">Task Desc</th>
+                        <th scope="col">Task Status</th>
+                        <th scope="col">Task Date</th>
+                        <th scope="col">Assigned to(Team Id)</th>
+                        <th scope="col">Delete</th>
+                    </tr>
+                </thead>
+                <tbody *ngFor="let task of taskService.task; let i=index">
+                    <tr>
+                        <td>{{task.taskid}}</td>
+                        <td>{{task.tasktitle}}</td>
+                        <td>{{task.taskdesc}}</td>
+                        <td>{{task.taskstatus}}</td>
+                        <td>{{dateformat(task.taskdate)}}</td>
+                        <td>{{(task.teamid==0)?"Not Assigned":task.teamid}}</td>
+                        <td><button class="btn p-0 text-danger material-icons"
+                                (click)="deleteTask(task.taskid,task.teamid) ">
+                                delete
+                            </button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="tab-pane fade" id="createTeam" role="tabpanel" aria-labelledby="todo-tab">
+            <h1 class="heading">Create Task</h1>
+            <hr>
+            <form class="mx-auto  " (ngSubmit)="addTask(addTaskForm)" #addTaskForm="ngForm">
+                <div class="form-control" style="border: none;">
+                    <div class="alert alert-danger" role="alert" *ngIf="errorAdding">
+                        Something went wrong try again
+                    </div>
+                    <div class="alert alert-success" role="alert" *ngIf="successAdding">
+                        Added Successfully
+                    </div>
+                    <input type="text" id="tasktitle" name="tasktitle" #tasktitle="ngModel"
+                        [(ngModel)]="newTask.tasktitle" required placeholder="Enter Task Name"
+                        class="form-control my-2 p-1.6">
+                    <textarea type="text" id="taskdesc" name="taskdesc" #taskdesc="ngModel"
+                        [(ngModel)]="newTask.taskdesc" required placeholder="Enter Task description"
+                        class="form-control my-2 p-1.6"></textarea>
+                    <div class="d-grid gap-2 pt-2">
+                        <button type="submit" class="btn btn-success"
+                            [disabled]="addTaskForm.pristine || addTaskForm.invalid">Create Task</button>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+        <div class="tab-pane fade" id="addemp" role="tabpanel" aria-labelledby="albums-tab">
+            <h1 class="heading">Assign Task</h1>
+            <hr>
+            <form class="mx-auto sticky-top " (ngSubmit)="assignTask(assignTaskForm)" #assignTaskForm="ngForm">
+                <div class="form-control" style="border: none;">
+                    <div class="alert alert-danger" role="alert" *ngIf="errorAssign">
+                        Something went wrong try again
+                    </div>
+                    <div class="alert alert-success" role="alert" *ngIf="successAssign">
+                        Added Successfully
+                    </div>
+                    <input type="text" id="teamid" name="teamid" #teamid="ngModel" [(ngModel)]="updateTeam.teamid"
+                        required placeholder="Enter Team Id" class="form-control my-2 p-1.6">
+                    <input type="text" id="taskid" name="taskid" #taskid="ngModel" [(ngModel)]="updateTeam.taskid"
+                        required placeholder="Enter Task id" class="form-control my-2 p-1.6">
+
+                    <div class="d-grid gap-2 pt-2">
+                        <button type="submit" class="btn btn-success"
+                            [disabled]="assignTaskForm.pristine || assignTaskForm.invalid">Assign Task </button>
+                    </div>
+                </div>
+            </form>
+            <table class="table table-light table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">Team Id</th>
+                        <th scope="col">Team Name</th>
+                        <th scope="col">Task Assigned</th>
+                    </tr>
+                </thead>
+                <tbody *ngFor="let team of teamservice.team; let i=index">
+                    <tr *ngIf="team.taskid==''||team.taskid==null">
+                        <th scope="row">{{team.teamid}}</th>
+                        <td>{{team.teamname??""}}</td>
+                        <td>{{team.taskid??"No Task Assigned"}}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+        <div class="tab-pane fade" id="updateTask" role="tabpanel" aria-labelledby="albums-tab">
+            <h1 class="heading">Updated Task Status</h1>
+            <hr>
+            <form class="mx-auto  " (ngSubmit)="updateTaskStatus(updateTaskStatusForm)" #updateTaskStatusForm="ngForm">
+                <div class="form-control" style="border: none;">
+                    <div class="alert alert-danger" role="alert" *ngIf="errorUpdate">
+                        Something went wrong try again
+                    </div>
+                    <div class="alert alert-success" role="alert" *ngIf="successUpdate">
+                        Added Successfully
+                    </div>
+                    <input type="text" id="taskid" name="taskid" #taskid="ngModel" [(ngModel)]="existingTask.taskid"
+                        required placeholder="Enter Task Id" class="form-control my-2 p-1.6">
+                    <label for="taskstatus">Status</label>
+                    <select id="taskstatus" name="taskstatus" #taskstatus="ngModel" required
+                        [(ngModel)]="existingTask.taskstatus" class="form-control my-2 p-1.6">
+                        <option *ngFor="let status of taskService.taskStatusList; let i = index" [value]="status">
+                            {{status}}
+                        </option>
+                    </select>
+
+                    <div class="d-grid gap-2 pt-2">
+                        <button type="submit" class="btn btn-success"
+                            [disabled]="updateTaskStatusForm.pristine || updateTaskStatusForm.invalid">Update Task
+                            Status
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,23 @@
+<h5 class="text-center font-weight-bold">Sign In to continue to:</h5>
+<form class="mx-auto " (ngSubmit)="signInSubmit(signInForm)" #signInForm="ngForm">
+  <div class="form-control" style="border: none;">
+    <div class="alert alert-danger" role="alert" *ngIf="error">
+      Something went wrong try again
+    </div>
+      <input type="email" id="empemail" name="empemail" #empemail="ngModel" [(ngModel)]="newEmp.empemail"
+              required pattern = "^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" placeholder="Employee Email" class="form-control my-2 p-1.6">
+          
+              <small class="text-form text-danger" *ngIf="empemail.errors?.required && empemail.touched">
+                Email is required
+              </small>
+              <small class="text-form text-danger" *ngIf="empemail.errors?.pattern && empemail.touched">
+                Email is Invalid
+              </small>
+    <input type="password" placeholder="Employee Password" required id="emppassword" name="emppassword"
+      #emppassword="ngModel" [(ngModel)]="newEmp.emppassword" class="form-control my-2 p-1.6">
+    <div class="d-grid gap-2 pt-2">
+      <button type="submit" class="btn btn-success" [disabled]="signInForm.pristine || signInForm.invalid">Sign
+        In</button>
+    </div>
+  </div>
+</form>

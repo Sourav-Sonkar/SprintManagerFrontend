@@ -1,0 +1,64 @@
+<div class="container p-4">
+  <h1 class="heading">DashBoard</h1>
+  <hr>
+  <div class="row no-gutters " *ngIf="!empAuth.isManager">
+    <div class="col-sm card m-2">
+      <img [src]="team" class="card-img-top" alt="...">
+      <div class="card-body">
+        <h5 class="card-title">Team Details</h5>
+        <ul class="list-group">
+          <li class="list-group-item">Team Name: {{teamdata.teamname}}</li>
+          <li class="list-group-item">No of members: {{empCount}}</li>
+        </ul>
+      </div>
+    </div>
+    <div class="col-sm card m-2">
+      <img [src]="task" class="card-img-top" alt="...">
+      <div class="card-body">
+        <h5 class="card-title">Task Details</h5>
+        <ul class="list-group">
+          <li class="list-group-item">Task Title: {{taskservice.empTask.tasktitle}}</li>
+          <li class="list-group-item">Task Status: {{taskservice.empTask.taskstatus}}</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="row no-gutters " *ngIf="empAuth.isManager">
+    <div class="col-sm card m-2">
+      <img [src]="team" class="card-img-top" alt="...">
+      <div class="card-body">
+        <h5 class="card-title">Team Summary</h5>
+        <p class="card-text">Stats of team</p>
+        <ul class="list-group">
+          <li class="list-group-item">No of teams: {{teamCount}}</li>
+          <li class="list-group-item">Teams with task: {{assigned}}</li>
+          <li class="list-group-item">Teams without task: {{unassigned}}</li>
+        </ul>
+      </div>
+    </div>
+    <div class="col-sm card m-2">
+      <img [src]="task" class="card-img-top mt-2" alt="...">
+      <div class="card-body">
+        <h5 class="card-title">Task Summary</h5>
+        <p class="card-text">Stats of Task</p>
+        <ul class="list-group">
+          <li class="list-group-item">Total Task: {{taskCount}}</li>
+          <li class="list-group-item">No of Task closed: {{closedTask}}</li>
+          <li class="list-group-item">No of Task unassigned: {{newTask}}</li>
+        </ul>
+      </div>
+    </div>
+    <div class="col-sm card m-2">
+      <img [src]="employee" class="card-img-top" alt="...">
+      <div class="card-body">
+        <h5 class="card-title">Employee Summary</h5>
+        <p class="card-text">Stats of Employee</p>
+        <ul class="list-group">
+          <li class="list-group-item">No of employee: {{empCount}}</li>
+          <li class="list-group-item">Employee without team: {{empWithOutTeam}}</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

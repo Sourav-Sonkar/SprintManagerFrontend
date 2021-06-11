@@ -1,0 +1,143 @@
+<div class="container p-3" *ngIf="!empAuth.isManager">
+    <h1 class="heading">Team Detail</h1>
+    <hr>
+    <div class="d-flex justify-content-between">
+        <h5 class="heading">Team name:{{currentTeam.teamname}}</h5>
+        <h5 class="heading">Task Assigned Id:{{currentTeam.taskid??"Not Assigned"}}</h5>
+    </div>
+    <h4 class="heading">Team Members</h4>
+    <table class="table table-light table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Employee Id</th>
+                <th scope="col">Employee Name</th>
+                <th scope="col">Employee Type</th>
+                <th scope="col">Employee Contact number</th>
+
+            </tr>
+        </thead>
+        <tbody *ngFor="let emp of empAuth.empList; let i=index">
+            <tr *ngIf="emp.teamid!=null && emp.teamid==empAuth.emp.teamid">
+                <th scope="row">{{emp.empid}}</th>
+                <th scope="row">{{emp.empname}}</th>
+                <th scope="row">{{emp.emptype}}</th>
+                <th scope="row">{{emp.empcontact}}</th>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<ul class="nav nav-tabs  bg-light" *ngIf="empAuth.isManager">
+    <li class="nav-item">
+        <button class="nav-link active d-flex align-items-center justify-content-center" data-bs-toggle="tab"
+            data-bs-target="#teamList" id="teamListTab" aria-current="teamList"><span
+                class="material-icons px-1">list_alt</span><span>Team List</span></button>
+    </li>
+    <li class="nav-item">
+        <button class="nav-link d-flex align-items-center justify-content-center" data-bs-toggle="tab"
+            data-bs-target="#createTeam" id="createTeamTab"><span
+                class="material-icons px-1">group_add</span><span>Create Team</span>
+        </button>
+    </li>
+    <li class="nav-item">
+        <button class="nav-link d-flex align-items-center justify-content-center" data-bs-toggle="tab"
+            data-bs-target="#addemp" id="addEmpTab"><span class="material-icons px-1">person_add_alt</span><span>Add
+                Employee to Team</span>
+        </button>
+    </li>
+
+</ul>
+<div class="container p-3" *ngIf="empAuth.isManager">
+    <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="teamList" role="tabpanel" aria-labelledby="post-tab">
+            <h1 class="heading">Team List</h1>
+            <hr>
+            <table class="table table-light table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">Team Id</th>
+                        <th scope="col">Team Name</th>
+                        <th scope="col">Task Assigned</th>
+                        <th scope="col">Delete</th>
+                    </tr>
+                </thead>
+                <tbody *ngFor="let team of teamService.team; let i=index">
+                    <tr>
+                        <th scope="row">{{team.teamid}}</th>
+                        <td>{{team.teamname??""}}</td>
+                        <td>{{team.taskid??"No Task Assigned"}}</td>
+                        <td><button class="btn p-0 text-danger material-icons" (click)="deleteTeam(team.teamid, i)">
+                                delete
+                            </button></td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+        <div class="tab-pane fade" id="createTeam" role="tabpanel" aria-labelledby="todo-tab">
+
+            <h1 class="heading">Create Team</h1>
+            <hr>
+            <form class="mx-auto  " (ngSubmit)="addTeam(addTeamForm)" #addTeamForm="ngForm">
+                <div class="form-control" style="border: none;">
+                    <div class="alert alert-danger" role="alert" *ngIf="addTeamError">
+                        Something went wrong try again
+                    </div>
+                    <div class="alert alert-success" role="alert" *ngIf="addTeamSuccess">
+                        Added Successfully
+                    </div>
+                    <input type="text" id="teamname" name="teamname" #teamname="ngModel" [(ngModel)]="newTeam.teamname"
+                        required placeholder="Enter Team Name" class="form-control my-2 p-1.6">
+                    <input type="text" placeholder="Task id(optional)" id="taskid" name="taskid" #taskid="ngModel"
+                        [(ngModel)]="newTeam.taskid" class="form-control my-2 p-1.6">
+                    <div class="d-grid gap-2 pt-2">
+                        <button type="submit" class="btn btn-success"
+                            [disabled]="addTeamForm.pristine || addTeamForm.invalid">Create Team</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="tab-pane fade" id="addemp" role="tabpanel" aria-labelledby="albums-tab">
+            <h1 class="heading">Add or Update Employee's team</h1>
+            <hr>
+            <div class="sticky-top">
+
+                <form class="mx-auto " (ngSubmit)="addEmp(addEmployee)" #addEmployee="ngForm">
+                    <div class="form-control" style="border: none;">
+                        <div class="alert alert-danger" role="alert" *ngIf="updateEmpError">
+                            Something went wrong try again
+                        </div>
+                        <div class="alert alert-success" role="alert" *ngIf="updateEmpSuccess">
+                            Added Successfully
+                        </div>
+                        <input type="text" id="empid" name="empid" #empid="ngModel" [(ngModel)]="updateEmp.empid"
+                            required placeholder="Enter employee id" class="form-control my-2 p-1.6">
+                        <input type="text" placeholder="Enter team id" id="teamid" name="teamid" #teamid="ngModel"
+                            [(ngModel)]="updateEmp.teamid" required class="form-control my-2 p-1.6">
+                        <div class="d-grid gap-2 pt-2">
+                            <button type="submit" class="btn btn-success"
+                                [disabled]="addEmployee.pristine || addEmployee.invalid">Add to team</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <table class="table table-light table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">Employee Id</th>
+                        <th scope="col">Team Id</th>
+                        <th scope="col">Employee Name</th>
+                        <th scope="col">Employee Type</th>
+                    </tr>
+                </thead>
+                <tbody *ngFor="let emp of empAuth.empList; let i=index">
+                    <tr>
+                        <th scope="row">{{emp.empid}}</th>
+                        <th scope="row">{{emp.teamid}}</th>
+                        <th scope="row">{{emp.empname}}</th>
+                        <th scope="row">{{emp.emptype}}</th>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

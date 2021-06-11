@@ -1,0 +1,64 @@
+<h5 class="text-center font-weight-bold">Sign up to continue to:</h5>
+<form class="mx-auto " (ngSubmit)="signUpSubmit(signUpForm)" #signUpForm="ngForm">
+
+  <div class="form-control" style="border: none;">
+    <div class="alert alert-danger" role="alert" *ngIf="error">
+      Something went wrong try again
+    </div>
+    <div class="input-group">
+      <input type="text" placeholder="Employee Name" id="empname" name="empname" #empname="ngModel"
+        [(ngModel)]="newEmp.empname" ngModel pattern="[a-zA-Z ]*" required class="form-control p-1.6">
+
+      <input type="email" id="empemail" name="empemail" #empemail="ngModel" [(ngModel)]="newEmp.empemail" required
+        pattern="^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" placeholder="Employee Email" class="form-control p-1.6">
+
+
+    </div>
+    <div style="text-align:end">
+      <small class="text-form text-danger" *ngIf="empemail.errors?.required && empemail.touched">
+        Email is required
+      </small> <small class="text-form text-danger" *ngIf="empemail.errors?.pattern && empemail.touched">
+        Email is Invalid
+      </small>
+     
+
+
+    </div>
+
+
+
+    <input type="text" id="empaddress" name="empaddress" #empaddress="ngModel" [(ngModel)]="newEmp.empaddress"
+      placeholder="Employee Address" class="form-control my-2 p-1.6">
+    <input type="password" id="emppassword" name="emppassword" #emppassword="ngModel" [(ngModel)]="newEmp.emppassword"
+      placeholder="Employee Password" required class="form-control my-2 p-1.6">
+    <input type="text" id="emptype" name="emptype" #emptype="ngModel" [(ngModel)]="newEmp.emptype"
+      placeholder="Employee Type" required class="form-control my-2 p-1.6">
+    
+      <input type="text" placeholder="Employee Contact" id="empcontact" name="empcontact" #empcontact="ngModel"
+        [(ngModel)]="newEmp.empcontact" required pattern="[1-9]{1}[0-9]{9}" class="form-control my-2 p-1.6">
+
+    
+
+    <small class="form-text text-danger" *ngIf="empcontact.errors?.required && empcontact.touched">
+      Contact number required</small>
+
+    <small class="form-text text-danger" *ngIf="empcontact.errors?.pattern && empcontact.touched">
+      invalid number
+    </small>
+
+    <input type="text" placeholder="Employee Age" id="empage" name="empage" #empage="ngModel"
+      [(ngModel)]="newEmp.empage" required class="form-control my-2 p-1.6">
+    <!-- </div> -->
+    <div class="input-group">
+
+      <!--<input type="text" id="teamid" name="teamid" #teamid="ngModel" [(ngModel)]="newEmp.teamid" placeholder="Team Id"
+        required class="form-control ">-->
+      <input type="text" id="mangid" name="mangid" #mangid="ngModel" [(ngModel)]="newEmp.mangid"
+        placeholder="Manager Id" required class="form-control">
+    </div>
+    <div class="d-grid gap-2 pt-2">
+      <button type="submit" class="btn btn-success" [disabled]="signUpForm.pristine || signUpForm.invalid">Sign
+        Up</button>
+    </div>
+  </div>
+</form>

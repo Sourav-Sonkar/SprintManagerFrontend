@@ -1,0 +1,14 @@
+<div class="container my-4 ">
+    <div class="row no-gutters d-flex justify-content-center shadow-lg bg-body">
+        <div class="col-sm align-self-center">
+            <img [src]="logo" alt="" height="100%" width="100%" class="rounded">
+        </div>
+        <div class="col-sm align-self-center py-1 mx-auto" *ngIf="empAuth.isSignUp">
+            <app-signup></app-signup>
+        </div>
+        <div class="col-sm align-self-center py-1 mx-auto" *ngIf="empAuth.isSignIn">
+            <app-login></app-login>
+        </div> 
+       
+    </div>
+</div>
